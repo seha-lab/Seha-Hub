@@ -1,0 +1,564 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seha-Hub</title>
+    <link href="../style.css" rel="stylesheet" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href="imgs/icon.ico" />
+
+    <style>
+      :root {
+        --bg1: #050816;
+        --bg2: #0b1024;
+        --panel: rgba(255, 255, 255, 0.08);
+        --line: rgba(173, 194, 255, 0.16);
+        --text: #eef4ff;
+        --muted: #9fb3d9;
+        --accent: #79a7ff;
+        --accent2: #8ef7ff;
+        --accent3: #c6d6ff;
+        --shadow: 0 24px 60px rgba(0, 0, 0, 0.34);
+        --radius-xl: 28px;
+        --radius-lg: 22px;
+        --radius-md: 18px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        font-family: "Pretendard", "Malgun Gothic", sans-serif;
+        color: var(--text);
+        background:
+          radial-gradient(
+            circle at top left,
+            rgba(121, 167, 255, 0.16),
+            transparent 28%
+          ),
+          radial-gradient(
+            circle at 85% 15%,
+            rgba(142, 247, 255, 0.1),
+            transparent 24%
+          ),
+          linear-gradient(180deg, var(--bg1), var(--bg2));
+        overflow-x: hidden;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.025) 1px, transparent 1px),
+          linear-gradient(
+            90deg,
+            rgba(255, 255, 255, 0.025) 1px,
+            transparent 1px
+          );
+        background-size: 28px 28px;
+        mask-image: radial-gradient(
+          circle at center,
+          black 35%,
+          transparent 90%
+        );
+        opacity: 0.35;
+      }
+
+      a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .wrap {
+        width: min(1080px, calc(100% - 32px));
+        margin: 0 auto;
+      }
+
+      .topbar {
+        position: sticky;
+        top: 0;
+        z-index: 50;
+        backdrop-filter: blur(16px);
+        background: rgba(7, 11, 26, 0.62);
+        border-bottom: 1px solid rgba(173, 194, 255, 0.08);
+      }
+
+      .topbar-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 18px;
+        padding: 14px 0;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .brand-logo {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        object-fit: cover;
+        background: transparent;
+        border: none;
+        box-shadow: none;
+      }
+
+      .brand-text {
+        min-width: 0;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 999px;
+        background: rgba(121, 167, 255, 0.1);
+        border: 1px solid rgba(121, 167, 255, 0.18);
+        color: var(--accent2);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      .brand-title {
+        margin: 8px 0 0;
+        font-size: clamp(20px, 3vw, 30px);
+        line-height: 1.1;
+        letter-spacing: -0.03em;
+      }
+
+      .brand-sub {
+        margin: 8px 0 0;
+        color: var(--muted);
+        font-size: 13px;
+        line-height: 1.7;
+      }
+
+      .nav {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+      }
+
+      .nav a {
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--accent3);
+        font-size: 14px;
+        font-weight: 600;
+      }
+
+      .hero {
+        padding: 64px 0 28px;
+      }
+
+      .hero-card,
+      .glass {
+        background: var(--panel);
+        border: 1px solid var(--line);
+        border-radius: var(--radius-xl);
+        box-shadow: var(--shadow);
+        backdrop-filter: blur(16px);
+      }
+
+      .hero-card {
+        padding: 34px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .hero-card::after {
+        content: "";
+        position: absolute;
+        inset: auto -60px -70px auto;
+        width: 220px;
+        height: 220px;
+        border-radius: 50%;
+        background: radial-gradient(
+          circle,
+          rgba(142, 247, 255, 0.22),
+          transparent 68%
+        );
+      }
+
+      .hero-title {
+        margin: 16px 0 14px;
+        font-size: clamp(34px, 6vw, 68px);
+        line-height: 1.03;
+        letter-spacing: -0.06em;
+      }
+
+      .hero-title .accent {
+        color: var(--accent2);
+        text-shadow: 0 0 24px rgba(142, 247, 255, 0.16);
+      }
+
+      .hero-desc {
+        max-width: 62ch;
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.9;
+      }
+
+      .hero-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+      }
+
+      .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 14px 18px;
+        border-radius: 16px;
+        font-weight: 700;
+        font-size: 14px;
+        transition:
+          transform 0.18s ease,
+          border-color 0.18s ease,
+          background 0.18s ease;
+      }
+
+      .btn:hover,
+      .quick-card:hover {
+        transform: translateY(-3px);
+      }
+
+      .btn-primary {
+        background: linear-gradient(
+          135deg,
+          rgba(121, 167, 255, 0.24),
+          rgba(142, 247, 255, 0.18)
+        );
+        border: 1px solid rgba(142, 247, 255, 0.22);
+      }
+
+      .btn-secondary {
+        background: rgba(255, 255, 255, 0.04);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--accent3);
+      }
+
+      .section {
+        padding: 22px 0 48px;
+      }
+
+      .section-head {
+        margin-bottom: 18px;
+      }
+
+      .section-title {
+        margin: 0;
+        font-size: clamp(24px, 3.5vw, 36px);
+        line-height: 1.15;
+        letter-spacing: -0.04em;
+      }
+
+      .section-desc {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 15px;
+      }
+
+      .quick-wrap {
+        padding: 24px;
+      }
+
+      .quick-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .quick-card {
+        position: relative;
+        display: block;
+        padding: 24px;
+        border-radius: var(--radius-lg);
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        transition:
+          transform 0.18s ease,
+          border-color 0.18s ease,
+          background 0.18s ease;
+      }
+
+      .quick-card::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(121, 167, 255, 0.06),
+          transparent 45%,
+          rgba(142, 247, 255, 0.04)
+        );
+        pointer-events: none;
+      }
+
+      .icon-chip {
+        width: 56px;
+        height: 56px;
+        border-radius: 16px;
+        display: grid;
+        place-items: center;
+        font-size: 24px;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        position: relative;
+      }
+
+      .quick-title {
+        position: relative;
+        margin: 16px 0 8px;
+        font-size: 24px;
+        font-weight: 800;
+        letter-spacing: -0.03em;
+      }
+
+      .quick-desc {
+        position: relative;
+        margin: 0;
+        color: var(--muted);
+        font-size: 15px;
+        line-height: 1.8;
+      }
+
+      .quick-meta {
+        position: relative;
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        margin-top: 16px;
+      }
+
+      .pill {
+        padding: 7px 10px;
+        border-radius: 999px;
+        font-size: 12px;
+        color: var(--accent3);
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+      }
+
+      .footer {
+        padding: 0 0 48px;
+      }
+
+      .footer-card {
+        padding: 22px;
+        border-radius: 24px;
+        background: rgba(255, 255, 255, 0.06);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .footer-title {
+        margin: 0;
+        font-size: 18px;
+      }
+
+      .footer-desc {
+        margin: 8px 0 0;
+        color: var(--muted);
+        line-height: 1.8;
+        font-size: 14px;
+      }
+
+      .footer-badge {
+        white-space: nowrap;
+        padding: 10px 14px;
+        border-radius: 999px;
+        background: rgba(121, 167, 255, 0.1);
+        border: 1px solid rgba(121, 167, 255, 0.18);
+        color: var(--accent2);
+        font-weight: 700;
+        font-size: 13px;
+      }
+
+      @media (max-width: 720px) {
+        .topbar-inner,
+        .footer-card {
+          flex-direction: column;
+          align-items: stretch;
+        }
+
+        .nav {
+          justify-content: flex-start;
+        }
+
+        .hero {
+          padding-top: 32px;
+        }
+
+        .hero-card,
+        .quick-wrap,
+        .quick-card,
+        .footer-card {
+          padding: 18px;
+        }
+
+        .brand-logo {
+          width: 48px;
+          height: 48px;
+        }
+
+        .hero-title {
+          font-size: clamp(30px, 10vw, 52px);
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <header class="topbar">
+      <div class="wrap topbar-inner">
+        <div class="brand">
+          <img class="brand-logo" src="imgs/icon.ico" alt="Seha-Hub 아이콘" />
+          <div class="brand-text">
+            <div class="eyebrow">Seha-Lab</div>
+            <h1 class="brand-title">Seha-Hub</h1>
+            <p class="brand-sub">필요한 페이지로 빠르게 이동하는 심플한 허브</p>
+          </div>
+        </div>
+
+        <nav class="nav">
+          <a href="#quick">바로가기</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="hero">
+        <article class="hero-card">
+          <div class="eyebrow">Utility Portal</div>
+          <h2 class="hero-title">
+            필요한 링크를 한곳에,<br />
+            <span class="accent">Seha-Hub</span>
+          </h2>
+          <p class="hero-desc">
+            복잡하게 많이 넣지 않고, 자주 쓰는 페이지로 바로 이동할 수 있게
+            정리한 심플한 허브입니다. Seha-Lab 분위기를 유지하면서도 빠르게
+            열리는 시작 페이지 느낌으로 사용할 수 있습니다.
+          </p>
+
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="#quick">바로가기</a>
+            <a class="btn btn-secondary" href="https://seha-lab.github.io/main">
+              Seha-Lab ✦
+            </a>
+          </div>
+        </article>
+      </section>
+
+      <section class="section" id="quick">
+        <div class="glass quick-wrap">
+          <div class="section-head">
+            <h3 class="section-title">바로가기</h3>
+            <p class="section-desc">
+              현재는 필요한 도구 하나만 깔끔하게 연결해두었습니다.
+            </p>
+          </div>
+
+          <div class="quick-grid">
+            <a class="quick-card" href="HTML-TAG-code/HTML-TAG-code.html">
+              <div class="icon-chip">&lt;/&gt;</div>
+              <div class="quick-title">HTML TAG Code</div>
+              <p class="quick-desc">
+                HTML 태그 관련 작업을 빠르게 열 수 있는 도구 페이지입니다.
+              </p>
+              <div class="quick-meta">
+                <span class="pill">HTML</span>
+                <span class="pill">TAG</span>
+                <span class="pill">Shortcut</span>
+              </div>
+            </a>
+
+            <a class="quick-card" href="base64_SHA256/base64인식기.html">
+              <div class="icon-chip">🔐</div>
+              <div class="quick-title">Base64 인식기</div>
+              <p class="quick-desc">
+                Base64 문자열을 해석하고 변환하는 도구입니다.
+              </p>
+              <div class="quick-meta">
+                <span class="pill">Encode</span>
+                <span class="pill">Decode</span>
+                <span class="pill">Text</span>
+              </div>
+            </a>
+
+            <a class="quick-card" href="base64_SHA256/해시256_UTF-8.html">
+              <div class="icon-chip">🧬</div>
+              <div class="quick-title">SHA256 생성기</div>
+              <p class="quick-desc">
+                문자열을 SHA256 해시로 변환하는 보안 도구입니다.
+              </p>
+              <div class="quick-meta">
+                <span class="pill">Hash</span>
+                <span class="pill">Security</span>
+                <span class="pill">UTF-8</span>
+              </div>
+            </a>
+
+            <a class="quick-card" href="FILE-CONVERTER/IMG-Converter.html">
+              <div class="icon-chip">🖼️</div>
+              <div class="quick-title">이미지 변환기</div>
+              <p class="quick-desc">
+                다양한 이미지 형식을 변환할 수 있는 유틸리티입니다.
+              </p>
+              <div class="quick-meta">
+                <span class="pill">Convert</span>
+                <span class="pill">File</span>
+                <span class="pill">Tool</span>
+              </div>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <div class="footer-card">
+          <div>
+            <h4 class="footer-title">Seha-Lab · Seha-Hub</h4>
+            <p class="footer-desc">
+              아이콘은 <b>imgs/icon.ico</b>를 사용하고, 바로가기는
+              <b>./HTML-TAG-code/HTML-TAG-code.html</b>로 연결됩니다.
+            </p>
+          </div>
+          <div class="footer-badge">Shortcut Ready</div>
+        </div>
+        <div class="wrap">© 2026 Seha Hub</div>
+      </footer>
+    </main>
+  </body>
+</html>

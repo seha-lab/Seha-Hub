@@ -1,0 +1,336 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link href="../style.css" rel="stylesheet" />
+    <link rel="icon" href="../imgs/icon.ico" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Seha-Hub-HTML TAG code</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        padding: 24px;
+        font-family: "Pretendard", "Malgun Gothic", sans-serif;
+        background: linear-gradient(180deg, #f4f7fb 0%, #eef3ff 100%);
+        color: #1f2a44;
+      }
+
+      .wrap {
+        width: min(1100px, 100%);
+        margin: 0 auto;
+        display: grid;
+        gap: 18px;
+      }
+
+      .panel {
+        background: rgba(255, 255, 255, 0.92);
+        border: 1px solid rgba(120, 140, 180, 0.18);
+        border-radius: 24px;
+        padding: 22px;
+        box-shadow: 0 18px 45px rgba(40, 60, 100, 0.1);
+      }
+
+      h1 {
+        margin: 0 0 8px;
+        font-size: clamp(24px, 4vw, 34px);
+        color: #16213d;
+      }
+
+      h2 {
+        margin: 0 0 12px;
+        font-size: 18px;
+        color: #22304d;
+      }
+
+      h3 {
+        margin: 18px 0 10px;
+        font-size: 15px;
+        color: #35508f;
+      }
+
+      .desc {
+        margin: 0;
+        font-size: 15px;
+        line-height: 1.8;
+        color: #5d6b8a;
+      }
+
+      .guide {
+        display: grid;
+        gap: 12px;
+      }
+
+      .guide-box {
+        padding: 14px 16px;
+        border-radius: 16px;
+        background: #f7faff;
+        border: 1px solid rgba(120, 140, 180, 0.14);
+      }
+
+      .guide-box p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.8;
+        color: #425170;
+      }
+
+      .guide-box code {
+        display: inline-block;
+        margin: 2px 4px 2px 0;
+        padding: 3px 8px;
+        border-radius: 999px;
+        background: #e7eeff;
+        color: #35508f;
+        font-size: 13px;
+        font-family: Consolas, "Courier New", monospace;
+      }
+
+      textarea {
+        width: 100%;
+        min-height: 280px;
+        resize: vertical;
+        border: 1px solid rgba(120, 140, 180, 0.2);
+        border-radius: 18px;
+        padding: 16px;
+        font-size: 15px;
+        line-height: 1.8;
+        outline: none;
+        background: #fcfdff;
+        color: #22304d;
+      }
+
+      .btn-row {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        margin-top: 14px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 999px;
+        padding: 12px 18px;
+        background: #4c69b0;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        cursor: pointer;
+      }
+
+      button.sub {
+        background: #e7eeff;
+        color: #35508f;
+      }
+
+      .preview {
+        min-height: 180px;
+        font-size: 17px;
+        line-height: 2;
+        color: #33415f;
+        word-break: keep-all;
+        overflow-wrap: break-word;
+      }
+
+      .preview b {
+        color: #182544;
+      }
+
+      .preview mark {
+        background: linear-gradient(transparent 35%, #fff2a8 35%);
+        padding: 0 6px;
+        border-radius: 8px;
+        color: #1f2a44;
+        font-weight: 700;
+      }
+
+      .code {
+        min-height: 180px;
+        padding: 16px;
+        border-radius: 18px;
+        background: #0f172a;
+        color: #dbe7ff;
+        font-size: 14px;
+        line-height: 1.8;
+        white-space: pre-wrap;
+        word-break: break-all;
+      }
+
+      .notice {
+        margin-top: 10px;
+        font-size: 13px;
+        line-height: 1.7;
+        color: #6a7896;
+      }
+
+      @media (max-width: 640px) {
+        body {
+          padding: 14px;
+        }
+
+        .panel {
+          padding: 16px;
+          border-radius: 18px;
+        }
+
+        textarea {
+          min-height: 220px;
+        }
+
+        .preview {
+          font-size: 16px;
+          line-height: 1.9;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <section class="panel">
+        <h1>세하 마크업 변환기</h1>
+        <p class="desc">
+          입력창에 세하 문법으로 글을 쓰고 변환하기를 누르면, 아래에 미리보기와
+          HTML 결과가 생성됩니다.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>사용법</h2>
+
+        <div class="guide">
+          <div class="guide-box">
+            <p>
+              1. 아래 입력칸에 글을 작성합니다.<br />
+              2. 필요한 부분에 문법을 넣습니다.<br />
+              3. <b>변환하기</b>를 누릅니다.<br />
+              4. 아래 미리보기에서 확인하거나 <b>HTML 복사</b>로 결과를
+              가져갑니다.
+            </p>
+          </div>
+
+          <div class="guide-box">
+            <h3>문법</h3>
+            <p>
+              <code>&&텍스트&&</code> 굵게<br />
+              <code>%%텍스트%%</code> 형광펜<br />
+              <code>///텍스트///</code> 기울임<br />
+              <code>^^텍스트^^(255,120,120,0.85)</code> 색상<br />
+              <code>***2***</code> 아래첨자<br />
+              <code>**2**</code> 위첨자<br />
+              <code>()()</code> 줄바꿈<br />
+              <code>$$세하$$</code> 좌우 중앙선
+            </p>
+          </div>
+
+          <div class="guide-box">
+            <h3>예시</h3>
+            <p>
+              <code>&&중요&&</code>
+              <code>%%강조%%</code>
+              <code>///분위기///</code><br />
+              <code>물은 H***2***O</code><br />
+              <code>E = mc**2**</code><br />
+              <code>첫 줄()()둘째 줄</code>
+            </p>
+          </div>
+        </div>
+
+        <p class="notice">
+          참고: <code>***</code>는 아래첨자, <code>**</code>는 위첨자입니다.
+          입력할 때 별 개수를 헷갈리지 않게 써주세요.
+        </p>
+      </section>
+
+      <section class="panel">
+        <h2>입력</h2>
+        <textarea id="input"></textarea>
+
+        <div class="btn-row">
+          <button onclick="convertText()">변환하기</button>
+          <button class="sub" onclick="copyHtml()">HTML 복사</button>
+          <button class="sub" onclick="copyPreviewText()">입력 복사</button>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>미리보기</h2>
+        <div id="preview" class="preview"></div>
+      </section>
+
+      <section class="panel">
+        <h2>변환된 HTML</h2>
+        <div id="output" class="code"></div>
+      </section>
+    </div>
+
+    <script>
+      const sampleText = ``;
+
+      function convertMarkup(text) {
+        let result = text;
+
+        result = result.replace(/\$\$(.+?)\$\$/gs, (_, content) => {
+          return (
+            '<span style="display:inline-flex;align-items:center;">' +
+            '<span style="width:12px;height:1px;background:currentColor;margin-right:6px;"></span>' +
+            content +
+            '<span style="width:12px;height:1px;background:currentColor;margin-left:6px;"></span>' +
+            "</span>"
+          );
+        });
+
+        result = result.replace(/\*\*\*(.+?)\*\*\*/gs, "<sub>$1</sub>");
+        result = result.replace(/\*\*(.+?)\*\*/gs, "<sup>$1</sup>");
+        result = result.replace(/&&(.+?)&&/gs, "<b>$1</b>");
+        result = result.replace(/%%(.+?)%%/gs, "<mark>$1</mark>");
+        result = result.replace(/\/\/\/(.+?)\/\/\//gs, "<i>$1</i>");
+
+        result = result.replace(
+          /\^\^(.+?)\^\^\((.*?)\)/gs,
+          (_, content, color) => {
+            return `<span style="color: rgba(${color})">${content}</span>`;
+          },
+        );
+
+        result = result.replaceAll("()()", "<br>");
+
+        return result;
+      }
+
+      function convertText() {
+        const input = document.getElementById("input").value;
+        const html = convertMarkup(input);
+
+        document.getElementById("preview").innerHTML = html;
+        document.getElementById("output").textContent = html;
+      }
+
+      async function copyHtml() {
+        const html = document.getElementById("output").textContent;
+        if (!html) return;
+        await navigator.clipboard.writeText(html);
+        alert("변환된 HTML을 복사했습니다.");
+      }
+
+      async function copyPreviewText() {
+        const input = document.getElementById("input").value;
+        await navigator.clipboard.writeText(input);
+        alert("입력 텍스트를 복사했습니다.");
+      }
+
+      function resetSample() {
+        document.getElementById("input").value = sampleText;
+        convertText();
+      }
+
+      resetSample();
+    </script>
+  </body>
+  <footer>
+    <div class="wrap">© 2026 Seha Hub</div>
+  </footer>
+</html>

@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Seha-Hub-Base64 Decoder/Incoder</title>
+    <link rel="icon" href="../imgs/icon.ico" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link href="../style.css" rel="stylesheet" />
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px;
+      }
+      textarea {
+        width: 90%;
+        height: 150px;
+        margin-bottom: 10px;
+      }
+      canvas {
+        max-width: 90%;
+        max-height: 50vh;
+        margin-top: 10px;
+        transition: transform 0.2s ease;
+        background: transparent;
+      }
+      button {
+        padding: 5px 10px;
+        cursor: pointer;
+        margin-right: 5px;
+      }
+      .buttonRow {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 5px;
+      }
+      section {
+        width: 100%;
+        max-width: 800px;
+        margin-bottom: 40px;
+        border: 1px solid #ccc;
+        padding: 15px;
+        border-radius: 8px;
+      }
+      section.dragover {
+        border: 2px dashed #007bff;
+        background: #f0f8ff;
+      }
+      h2 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <section id="dropBase64">
+      <h2>Base64 → 이미지 인식기 (투명 배경 지원, 드래그앤드롭)</h2>
+      <textarea
+        id="base64Input"
+        placeholder="여기에 Base64 문자열 붙여넣기"
+      ></textarea>
+      <div class="buttonRow">
+        <button id="showBtn">이미지 표시</button>
+        <button id="clearBtn">지우기</button>
+        <button id="zoomInBtn">+</button>
+        <button id="zoomOutBtn">-</button>
+        <button id="toggleBorderBtn">테두리 토글</button>
+        <button id="downloadBtn">파일 다운로드</button>
+        <input type="file" id="fileInput" accept=".txt" />
+      </div>
+      <canvas id="displayCanvas"></canvas>
+    </section>
+
+    <section id="dropImage">
+      <h2>이미지 → Base64 변환기 (드래그앤드롭 지원)</h2>
+      <input type="file" id="imgFileInput" accept="image/*" />
+      <div class="buttonRow">
+        <button id="downloadBase64Btn">복사</button>
+        <button id="clearBase64Btn">지우기</button>
+      </div>
+      <textarea
+        id="base64Output"
+        placeholder="여기에 Base64 문자열이 표시됩니다"
+      ></textarea>
+    </section>
+
+    <script>
+      const base64Input = document.getElementById("base64Input");
+      const displayCanvas = document.getElementById("displayCanvas");
+      const ctx = displayCanvas.getContext("2d");
+      let scale = 1;
+      let borderVisible = false;
+
+      // Base64 → Canvas 이미지 표시
+      function drawBase64Image(base64) {
+        if (!base64) return;
+        const img = new Image();
+        img.onload = () => {
+          displayCanvas.width = img.width;
+          displayCanvas.height = img.height;
+
+          ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+          ctx.save();
+          ctx.scale(scale, scale);
+          ctx.drawImage(img, 0, 0);
+          ctx.restore();
+
+          displayCanvas.style.border = borderVisible
+            ? "1px solid #000"
+            : "none";
+        };
+        img.src = base64.startsWith("data:")
+          ? base64
+          : "data:image/png;base64," + base64;
+      }
+
+      // 버튼 이벤트
+      document.getElementById("showBtn").addEventListener("click", () => {
+        const base64 = base64Input.value.trim();
+        if (base64) drawBase64Image(base64);
+        else alert("Base64 문자열을 입력해주세요.");
+      });
+
+      document.getElementById("zoomInBtn").addEventListener("click", () => {
+        scale += 0.1;
+        drawBase64Image(base64Input.value.trim());
+      });
+
+      document.getElementById("zoomOutBtn").addEventListener("click", () => {
+        scale = Math.max(0.1, scale - 0.1);
+        drawBase64Image(base64Input.value.trim());
+      });
+
+      document
+        .getElementById("toggleBorderBtn")
+        .addEventListener("click", () => {
+          borderVisible = !borderVisible;
+          drawBase64Image(base64Input.value.trim());
+        });
+
+      document.getElementById("clearBtn").addEventListener("click", () => {
+        base64Input.value = "";
+        ctx.clearRect(0, 0, displayCanvas.width, displayCanvas.height);
+        displayCanvas.style.border = "none";
+        scale = 1;
+      });
+
+      document.getElementById("downloadBtn").addEventListener("click", () => {
+        const text = base64Input.value.trim();
+        if (!text) {
+          alert("Base64가 없습니다");
+          return;
+        }
+        downloadTextFile(text, "base64_image.txt");
+      });
+
+      document.getElementById("fileInput").addEventListener("change", (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          base64Input.value = evt.target.result.trim();
+        };
+        reader.readAsText(file);
+      });
+
+      // 이미지 → Base64 변환
+      const imgFileInput = document.getElementById("imgFileInput");
+      const base64Output = document.getElementById("base64Output");
+
+      imgFileInput.addEventListener("change", (e) => {
+        handleImageFile(e.target.files[0]);
+      });
+
+      document
+        .getElementById("downloadBase64Btn")
+        .addEventListener("click", () => {
+          const text = base64Output.value.trim();
+          if (!text) {
+            alert("Base64가 없습니다");
+            return;
+          }
+          navigator.clipboard.writeText(text);
+        });
+
+      document
+        .getElementById("clearBase64Btn")
+        .addEventListener("click", () => {
+          base64Output.value = "";
+          imgFileInput.value = "";
+        });
+
+      function handleImageFile(file) {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          base64Output.value = evt.target.result.split(",")[1];
+        };
+        reader.readAsDataURL(file);
+      }
+
+      // 다운로드 함수
+      function downloadTextFile(text, filename) {
+        const blob = new Blob([text], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }
+
+      // ===== 드래그앤드롭 지원 =====
+      function setupDragAndDrop(dropArea, onFile, onText) {
+        dropArea.addEventListener("dragover", (e) => {
+          e.preventDefault();
+          dropArea.classList.add("dragover");
+        });
+        dropArea.addEventListener("dragleave", () =>
+          dropArea.classList.remove("dragover"),
+        );
+        dropArea.addEventListener("drop", (e) => {
+          e.preventDefault();
+          dropArea.classList.remove("dragover");
+          if (e.dataTransfer.files.length > 0) {
+            onFile(e.dataTransfer.files[0]);
+          } else {
+            const text = e.dataTransfer.getData("text");
+            if (text && onText) onText(text);
+          }
+        });
+      }
+
+      setupDragAndDrop(
+        document.getElementById("dropBase64"),
+        (file) => {
+          const reader = new FileReader();
+          reader.onload = (evt) => {
+            base64Input.value = evt.target.result.trim();
+          };
+          reader.readAsText(file);
+        },
+        (text) => (base64Input.value = text),
+      );
+
+      setupDragAndDrop(
+        document.getElementById("dropImage"),
+        (file) => handleImageFile(file),
+        null,
+      );
+    </script>
+  </body>
+  <footer>
+    <div class="wrap">© 2026 Seha Hub</div>
+  </footer>
+</html>

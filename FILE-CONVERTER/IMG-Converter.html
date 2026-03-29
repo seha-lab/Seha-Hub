@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" href="../imgs/icon.ico" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link href="../style.css" rel="stylesheet" />
+    <title>Seha-Hub-IMG Converter</title>
+    <style>
+      body {
+        font-family: Arial;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+      }
+      #dropzone {
+        border: 2px dashed #888;
+        padding: 50px;
+        width: 300px;
+        text-align: center;
+        margin-bottom: 20px;
+        cursor: pointer;
+      }
+      #preview,
+      #output {
+        margin-top: 20px;
+        width: 90%;
+        max-width: 1000px;
+        display: flex;
+        flex-wrap: wrap;
+      }
+      .file-block {
+        margin: 10px;
+        border: 1px solid #ccc;
+        padding: 10px;
+        width: 150px;
+        text-align: center;
+      }
+      .file-block img {
+        max-width: 100px;
+        margin: 5px;
+        border: 1px solid #333;
+      }
+      button {
+        margin: 5px;
+        padding: 5px 10px;
+      }
+      #searchInput {
+        margin-bottom: 10px;
+        padding: 5px;
+        width: 300px;
+      }
+      a {
+        font-size: 12px;
+        display: block;
+        margin: 3px 0;
+        text-decoration: none;
+      }
+      a:hover {
+        font-size: 17px;
+        display: block;
+        margin: 3px 0;
+        color: #f827ff;
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <h2>이미지 파일 변환기</h2>
+
+    <div id="dropzone">파일을 끌어다 놓거나 클릭</div>
+    <input
+      type="file"
+      id="fileInput"
+      style="display: none"
+      multiple
+      accept="png,
+            jpg,
+            webp,
+            bmp,
+            gif,
+            tiff,
+            cur,
+            ico,
+            svg,
+            heic,
+            avif,
+            jfif,
+            pjpeg,
+            pjp,
+            wbmp,
+            apng,
+            jxl,
+            tga,
+            dds,
+            hdr,
+            exr,
+            sgi,
+            pcx,
+            psd,
+            raw"
+    />
+    <button id="convertBtn">변환</button>
+    <input id="searchInput" type="text" placeholder="검색어 입력" />
+
+    <div id="preview"></div>
+    <div id="output"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@joeattardi/icojs@2.0.1/dist/ico.min.js"></script>
+    <script>
+      const dropzone = document.getElementById("dropzone");
+      const fileInput = document.getElementById("fileInput");
+      const output = document.getElementById("output");
+      const preview = document.getElementById("preview");
+      const convertBtn = document.getElementById("convertBtn");
+      const searchInput = document.getElementById("searchInput");
+
+      let filesList = [];
+
+      dropzone.addEventListener("click", () => fileInput.click());
+      dropzone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = "blue";
+      });
+      dropzone.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = "#888";
+      });
+      dropzone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dropzone.style.borderColor = "#888";
+        filesList = Array.from(e.dataTransfer.files);
+        showPreview();
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        filesList = Array.from(e.target.files);
+        showPreview();
+      });
+
+      // 선택 즉시 미리보기
+      function showPreview() {
+        preview.innerHTML = "";
+        filesList.forEach((file) => {
+          const div = document.createElement("div");
+          div.className = "file-block";
+          div.innerHTML = `<b>${file.name}</b><br>`;
+          const img = document.createElement("img");
+          img.src = URL.createObjectURL(file);
+          div.appendChild(img);
+          preview.appendChild(div);
+        });
+      }
+
+      convertBtn.addEventListener("click", async () => {
+        if (filesList.length === 0) {
+          alert("파일 선택 필요");
+          return;
+        }
+
+        output.innerHTML = ""; // 변환 후 출력 초기화
+
+        for (const file of filesList) {
+          const url = URL.createObjectURL(file);
+          const img = new Image();
+          img.src = url;
+          await new Promise((r) => (img.onload = r));
+
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          ctx.drawImage(img, 0, 0);
+
+          const types = [
+            "png",
+            "jpg",
+            "webp",
+            "bmp",
+            "gif",
+            "tiff",
+            "cur",
+            "ico",
+            "svg",
+            "heic",
+            "avif",
+            "jfif",
+            "pjpeg",
+            "pjp",
+            "wbmp",
+            "apng",
+            "jxl",
+            "tga",
+            "dds",
+            "hdr",
+            "exr",
+            "sgi",
+            "pcx",
+            "psd",
+            "raw",
+          ];
+          for (const type of types) {
+            const dataURL = canvas.toDataURL("image/" + type);
+            const div = document.createElement("div");
+            div.className = "file-block";
+            div.dataset.filename = (
+              file.name.split(".")[0] +
+              "." +
+              type
+            ).toLowerCase();
+            div.innerHTML = `<b>${file.name.split(".")[0]}.${type}</b><br>`;
+
+            const link = document.createElement("a");
+            link.href = dataURL;
+            link.download = file.name.split(".")[0] + "." + type;
+            link.textContent = "다운로드 (" + type + ")";
+            div.appendChild(link);
+
+            const previewImg = document.createElement("img");
+            previewImg.src = dataURL;
+            div.appendChild(previewImg);
+
+            output.appendChild(div);
+          }
+
+          // ICO & CUR 변환
+          try {
+            const buffer = await file.arrayBuffer();
+            const icoArrayBuffer = await ICO.encode([
+              { buffer: buffer, width: img.width, height: img.height },
+            ]);
+            ["ico", "cur"].forEach((ext) => {
+              const blob = new Blob([icoArrayBuffer], { type: "image/x-icon" });
+              const div = document.createElement("div");
+              div.className = "file-block";
+              div.dataset.filename = (
+                file.name.split(".")[0] +
+                "." +
+                ext
+              ).toLowerCase();
+              div.innerHTML = `<b>${file.name.split(".")[0]}.${ext}</b><br>`;
+
+              const link = document.createElement("a");
+              link.href = URL.createObjectURL(blob);
+              link.download = file.name.split(".")[0] + "." + ext;
+              link.textContent = "다운로드 (" + ext + ")";
+              div.appendChild(link);
+
+              const previewImg = document.createElement("img");
+              previewImg.src = URL.createObjectURL(blob);
+              div.appendChild(previewImg);
+
+              output.appendChild(div);
+            });
+          } catch (e) {
+            console.log("ICO/CUR 실패", e);
+          }
+        }
+      });
+
+      // 검색 기능
+      searchInput.addEventListener("input", () => {
+        const val = searchInput.value.toLowerCase();
+        document.querySelectorAll(".file-block").forEach((div) => {
+          div.style.display = div.dataset.filename.includes(val)
+            ? "block"
+            : "none";
+        });
+      });
+    </script>
+  </body>
+  <footer>
+    <div class="wrap">© 2026 Seha Hub</div>
+  </footer>
+</html>
